@@ -1,4 +1,7 @@
 import React, { Component } from 'react'
+import axios from 'axios';
+import ListadoTecnico from '../ListadoTecnico/ListadoTecnico'
+
 
 export default class Registro extends Component {
     state={
@@ -7,8 +10,37 @@ export default class Registro extends Component {
         fechaInicio:"",
         fechaFin:"",
         titulo:"Calculadora Horas",
-        infoServicio:[]
+        infoServicio:[],
+        tecnico:[]
     }
+
+    componentDidMount() {
+      axios.get('http://localhost:8085/api/reportes').then(res => {
+          console.log(res);
+          this.setState({infoServicio: res.data})
+      })
+  }
+
+      save = () => {
+        // console.log(this.state.infoServicio)
+        const prueba = {
+            idTecnico : this.state.idTecnico,
+            idServico : this.state.idServicio,
+            fechaInicio : this.state.fechaInicio,
+            fechaFin : this.state.fechaFin
+        }
+        console.log(prueba)
+        axios.post('http://localhost:8085/api/guardar', prueba )
+        .then(res => {console.log(res.data)})
+        this.setState({
+          idTecnico:'',
+          idServicio:'',
+          fechaInicio:'',
+          fechaFin:''
+        },alert("El ténico fue ingresado correctamente"))
+
+      }
+
 
     handleChange = (e) => {
         e.preventDefault()
@@ -42,27 +74,19 @@ export default class Registro extends Component {
 
     onClick = (e) => {
         e.preventDefault()
+
         this.setState({
             infoServicio:[...this.state.infoServicio,{
             idTecnico: this.state.idTecnico,
             idServicio: this.state.idServicio,
             fechaInicio: this.state.fechaInicio,
-            horaInicio: this.state.horaInicio,
-            fechaFin: this.state.fechaFin,
-            horaFin: this.state.horaFin
+            fechaFin: this.state.fechaFin
             }],
-            idTecnico:'',
-            idServicio:'',
-            fechaInicio:'',
-            horaInicio:'',
-            fechaFin:'',
-            horaFin:''
-        })
+        },this.save())
      }
 
-     
     render() {
-        const {idTecnico, idServicio, fechaInicio, fechaFin}= this.state
+        const {idTecnico, idServicio, fechaInicio, fechaFin, infoServicio}= this.state
         return (
            <form onSubmit={this.onClick}>
               <div className="form-row">
@@ -127,6 +151,8 @@ export default class Registro extends Component {
               <div className="form-group">
                 <button type="submit" className="btn btn-primary btn-lg btn-block bg-blue text-white lh-100">Guardar</button>
               </div>
+
+              <ListadoTecnico infoServicio={infoServicio}/>
             </form>
         )
     }
