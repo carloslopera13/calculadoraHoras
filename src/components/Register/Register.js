@@ -16,29 +16,25 @@ export default class Registro extends Component {
 
     componentDidMount() {
       axios.get('http://localhost:8085/api/reportes').then(res => {
-          console.log(res);
           this.setState({infoServicio: res.data})
       })
   }
 
       save = () => {
-        // console.log(this.state.infoServicio)
         const prueba = {
             idTecnico : this.state.idTecnico,
             idServico : this.state.idServicio,
             fechaInicio : this.state.fechaInicio,
             fechaFin : this.state.fechaFin
         }
-        console.log(prueba)
         axios.post('http://localhost:8085/api/guardar', prueba )
-        .then(res => {console.log(res.data)})
+        .then(res => res.data)
         this.setState({
           idTecnico:'',
           idServicio:'',
           fechaInicio:'',
           fechaFin:''
         },alert("El ténico fue ingresado correctamente"))
-
       }
 
 
@@ -69,6 +65,9 @@ export default class Registro extends Component {
             console.log('La Fecha final es mayor que la fecha inicial')
         } else {
             alert('La Fecha Inicial es mayor que la fecha final, vuelvelo a intentar')
+            this.setState({
+              fechaFin:''
+            })
         }
      }
 

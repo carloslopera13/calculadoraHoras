@@ -3,7 +3,7 @@ import React from 'react'
 export default function ListadoTecnico(props) {
     const {infoServicio} = props
     return (
-        <table className="table table-striped">
+        <table className="table table-striped table-dark">
             <thead>
             <tr>
               <th scope="col">Id Tecnico</th>
